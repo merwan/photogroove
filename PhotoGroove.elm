@@ -3,6 +3,7 @@ module PhotoGroove exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing(..)
+import Html.Events exposing(onClick)
 
 
 initialModel =
@@ -35,9 +36,21 @@ viewThumbnail selectedUrl thumbnail =
     img
         [ src (urlPrefix ++ thumbnail.url)
         , classList [ ( "selected", selectedUrl == thumbnail.url ) ]
+        , onClick { operation = "SELECT_PHOTO", data = thumbnail.url }
         ]
         []
 
 
+update msg model =
+    if msg.operation == "SELECT_PHOTO" then
+        { model | selectedUrl = msg.data }
+    else
+        model
+
+
 main =
-    view initialModel
+    Html.beginnerProgram
+        { model = initialModel
+        , view = view
+        , update = update
+        }
